@@ -1,5 +1,5 @@
 import discord
-from discord import guild
+from discord.ext import commands
 from dotenv import load_dotenv
 import os
 
@@ -10,35 +10,37 @@ load_dotenv()
 intents = discord.Intents.default()
 intents.members = True
 intents.reactions = True
-client = discord.Client(intents=intents)
+bot = commands.Bot(command_prefix="/", intents=intents)
+bot.load_extension("commands")
 
 greetings = [
     "Hola there, ",
     "Wilkkomen, ",
     "Glad to see you, ",
-    "Nice to have you here, "
+    "Nice to have you here, ",
 ]
 
 
-@client.event
+@bot.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
+    print("We have logged in as {0.user}".format(bot))
 
 
-@client.event
+@bot.event
 async def on_member_join(member):
-    print('New user here')
-    channel = client.get_channel(899924394971893830)
+    print("New user here")
+    channel = bot.get_channel(899924394971893830)
     greeting = random.choice(greetings) + member.display_name
     await channel.send(greeting)
 
-client.run(os.environ.get('BOT_TOKEN'))
 
-
-@client.event
+@bot.event
 async def on_raw_reaction_add(payload):
-    channel = client.get_channel(payload.channel_id)
+    channel = bot.get_channel(payload.channel_id)
     message = await channel.fetch_message(payload.message_id)
     sender = message.author.display_name
     user = payload.member.display_name
     await channel.send("{0} Reacted to {1}'s message".format(user, sender))
+
+
+bot.run(os.environ.get("BOT_TOKEN"))
