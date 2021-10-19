@@ -33,3 +33,12 @@ async def on_member_join(member):
     await channel.send(greeting)
 
 client.run(os.environ.get('BOT_TOKEN'))
+
+
+@client.event
+async def on_raw_reaction_add(payload):
+    channel = client.get_channel(payload.channel_id)
+    message = await channel.fetch_message(payload.message_id)
+    sender = message.author.display_name
+    user = payload.member.display_name
+    await channel.send("{0} Reacted to {1}'s message".format(user, sender))
