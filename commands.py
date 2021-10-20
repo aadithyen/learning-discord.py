@@ -27,6 +27,17 @@ class Commands(commands.Cog):
         db.commit()
         await ctx.message.delete()
 
+    @commands.command()
+    @commands.has_role("test role")
+    async def names(self, ctx):
+        msg = ""
+        sql = "SELECT name FROM USERS"
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        msg = ", ".join(i[0] for i in rows)
+        await ctx.channel.send(msg)
+        await ctx.message.delete()
+
 
 def setup(bot):
     bot.add_cog(Commands(bot))
