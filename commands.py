@@ -1,6 +1,7 @@
 from sqlite3.dbapi2 import IntegrityError
 import discord
 from discord.ext import commands
+from discord.utils import get
 import sqlite3
 
 db = sqlite3.connect("test.db")
@@ -13,6 +14,8 @@ class Commands(commands.Cog):
 
     @commands.command()
     async def createRole(self, ctx, roleName):
+        if get(ctx.guild.roles, name=roleName):
+            await ctx.send("Role exists.")
         role = await ctx.guild.create_role(name=roleName)
         await ctx.author.add_roles(role)
         await ctx.message.delete()
