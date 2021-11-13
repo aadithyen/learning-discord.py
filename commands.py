@@ -34,8 +34,9 @@ class Commands(commands.Cog):
         sql = "SELECT name FROM USERS"
         cursor.execute(sql)
         rows = cursor.fetchall()
-        msg = ", ".join(i[0] for i in rows)
-        await ctx.channel.send(msg)
+        if (any(rows)):
+                msg = ", ".join(i[0] for i in rows)
+                await ctx.channel.send(msg)
         await ctx.message.delete()
 
 
